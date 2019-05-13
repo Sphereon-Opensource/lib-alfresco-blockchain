@@ -1,4 +1,6 @@
-# LibAlfrescoBlockchain
+# Alfresco Blockchain library
+
+Angular package containing blockchain functionality for the [Alfresco Content App](https://github.com/Sphereon-Opensource/alfresco-content-app).
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.2.
 
@@ -13,6 +15,21 @@ Run `ng generate component component-name` to generate a new component. You can 
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+
+### Building alfresco blockchain library
+
+```bash
+ng build alfresco-blockchain --prod
+cd dist/alfresco-blockchain
+npm pack
+```
+
+This generates a NPM package (`alfresco-blockchain-0.0.1.tgz`) which can be used as a dependency in other projects.
+
+In the Alfresco Content App, do:
+```bash
+npm install ../lib-alfresco-blockchain/dist/alfresco-blockchain/alfresco-blockchain-0.0.1.tgz
+```
 
 ## Running unit tests
 
