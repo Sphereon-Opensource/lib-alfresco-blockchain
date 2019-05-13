@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "alfresco-blockchain": [
+        "dist/alfresco-blockchain"
+      ],
+      "alfresco-blockchain/*": [
+        "dist/alfresco-blockchain/*"
+      ]
+    }
   }
 }
