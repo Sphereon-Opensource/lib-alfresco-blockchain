@@ -6,13 +6,9 @@ import { AlfrescoBlockchainService } from '../../projects/alfresco-blockchain/sr
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'lib-alfresco-blockchain';
 
   constructor(private blockchainService: AlfrescoBlockchainService) {
-  }
-
-  ngOnInit(): void {
-    this.title = this.blockchainService.foo();
   }
 }

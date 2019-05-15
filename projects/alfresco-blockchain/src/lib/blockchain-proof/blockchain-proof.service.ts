@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MinimalNodeEntity, MinimalNodeEntryEntity } from 'alfresco-js-api';
 import { Subject } from 'rxjs';
-import { sprintf } from 'sprintf-js';
 import { BlockchainService, Configuration, VerifyContentResponse } from './api';
 import * as models from './api/model/models';
 
@@ -60,19 +59,17 @@ export class BlockchainProofService {
             }
         };
         this.nodesApiService.updateNode(entity.entry.id, nodeBody).subscribe(value => {
-            const messageBuilder = [];
-            messageBuilder.push(sprintf(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.REGISTRATION_STARTED'), entity.entry.name));
-            messageBuilder.push('.');
-            const message = messageBuilder.join('');
-            console.log(message);
+            const message = this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.REGISTRATION_STARTED', { name: entity.entry.name }) + '.';
             subject.next(message);
             atomicItemCounter.incrementIndex();
             if (atomicItemCounter.isLast()) {
                 subject.complete();
             }
         }, error => {
-            const userMessage = sprintf(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.PROCESS_FAILED'),
-                this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.REGISTRATION'), entity.entry.name);
+            const userMessage = this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.PROCESS_FAILED', {
+                process: this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.REGISTRATION'),
+                entity: entity.entry.name,
+            });
             this.handleApiError(error, userMessage, subject);
         });
     }
@@ -132,8 +129,10 @@ export class BlockchainProofService {
             subject.next(finalMessage.substring(0, finalMessage.length - 1));
             subject.complete();
         }, error => {
-            const userMessage = sprintf(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.PROCESS_FAILED'),
-                this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.VERIFICATION'), error.error.message);
+            const userMessage = this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.PROCESS_FAILED', {
+                process: this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.VERIFICATION'),
+                entity: error.error.message,
+            });
             this.handleApiError(error, userMessage, subject);
         });
     }
@@ -157,7 +156,7 @@ export class BlockchainProofService {
         }
 
         if (registrationState === 'REGISTERED') {
-            messageBuilder.push(sprintf(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.FILE_WAS'), entry.name));
+            messageBuilder.push(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.FILE_WAS', { file: entry.name }));
             messageBuilder.push(' ');
             if (registrationTime != null) {
                 messageBuilder.push(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.REGISTERED_ON'));
@@ -167,11 +166,11 @@ export class BlockchainProofService {
                 messageBuilder.push(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.REGISTERED'));
             }
         } else if (registrationState === 'PENDING') {
-            messageBuilder.push(sprintf(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.FILE_IS'), entry.name));
+            messageBuilder.push(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.FILE_IS', { file: entry.name }));
             messageBuilder.push(' ');
             messageBuilder.push(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.PENDING'));
         } else {
-            messageBuilder.push(sprintf(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.FILE_IS'), entry.name));
+            messageBuilder.push(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.FILE_IS', { file: entry.name }));
             messageBuilder.push(' ');
             messageBuilder.push(this.translate('APP.MESSAGES.INFO.BLOCKCHAIN.NOT_REGISTERED'));
         }
@@ -179,8 +178,8 @@ export class BlockchainProofService {
         return messageBuilder.join('');
     }
 
-    private translate(key: string) {
-        return this.translation.instant(key);
+    private translate(key: string, interpolateParams = {}) {
+        return this.translation.instant(key, interpolateParams);
     }
 
     private handleApiError(error, userMessage, subject: Subject<string>) {

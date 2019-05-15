@@ -13,7 +13,7 @@
         "document verification"
     ],
     "version": "0.0.1",
-    "dependencies": {
-        "@alfresco/js-api": "^3.2.0"
+    "peerDependencies": {
+        "alfresco-js-api": "2.6.1"
     }
 }
